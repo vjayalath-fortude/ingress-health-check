@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ingress-health-check
+  namespace: devops
+spec:
+  schedule: "0 8-17/2 * * *"  # Run every 2 hours between 08:00 and 17:00
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: ingress-health-check-sa
+          containers:
+          - name: ingress-health-check
+            image: vjayalathftd/ingress-health-check:1.0.0 
+            imagePullPolicy: Always
+            env:
+            - name: KUBECONFIG
+              value: "/root/.kube/config"
+            args: ["/bin/sh", "-c", "/script/healthcheck.sh"]
+            volumeMounts:
+            - name: kubeconfig
+              mountPath: /root/.kube
+              readOnly: true
+          restartPolicy: OnFailure
