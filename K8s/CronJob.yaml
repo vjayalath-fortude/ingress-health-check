@@ -16,9 +16,9 @@ spec:
           - name: ingress-health-check
             image: vjayalathftd/ingress-health-check:1.0.0 
             imagePullPolicy: Always
-            env:
-            - name: KUBECONFIG
-              value: "/root/.kube/config"
+            # env:
+            # - name: KUBECONFIG
+            #   value: "/root/.kube/config"
             args: ["/bin/sh", "-c", "/script/healthcheck.sh"]
             volumeMounts:
             - name: kubeconfig
